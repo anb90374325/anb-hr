@@ -16,9 +16,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .tb{padding:6px 11px;border-radius:var(--r);border:none;background:transparent;font-size:12px;color:var(--pk-dark);cursor:pointer;white-space:nowrap;font-family:inherit}
 .tb:hover{background:var(--pk-mid)}.tb.on{background:var(--pk);color:white;font-weight:500}
 .tb.flash{animation:tf .6s ease}@keyframes tf{0%{box-shadow:0 0 0 0 rgba(232,49,90,.7)}70%{box-shadow:0 0 0 7px rgba(232,49,90,0)}100%{}}
+/* 桌機版 */
 .main{display:flex;height:580px;background:var(--bg);border-radius:0 0 var(--rl) var(--rl);border:1px solid var(--border);border-top:none;overflow:hidden}
-.ip{flex:1;padding:1.1rem;overflow-y:auto;border-right:1px solid var(--border)}
-.cp{width:340px;flex-shrink:0;display:flex;flex-direction:column}
+.ip{flex:1;padding:1.1rem;overflow-y:auto;border-right:1px solid var(--border);min-height:0}
+.cp{width:340px;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;min-height:0;position:relative}
+/* 手機版：對話區固定高度，內容自行滾動 */
+@media(max-width:700px){
+  .page{padding:8px}
+  .main{flex-direction:column;height:auto;border-radius:0 0 var(--rl) var(--rl)}
+  .ip{border-right:none;border-bottom:1px solid var(--border);height:320px;min-height:0;overflow-y:auto;flex:none}
+  .cp{width:100%;height:420px;min-height:420px;flex-shrink:0;border-top:none;position:relative}
+}
 .sec{display:none}.sec.on{display:block}
 .stitle{font-size:13px;font-weight:600;color:var(--pk);margin-bottom:.8rem;padding-bottom:6px;border-bottom:2px solid var(--pk-mid)}
 .ssub{font-size:11px;font-weight:600;color:var(--text2);margin:.9rem 0 .5rem;text-transform:uppercase;letter-spacing:.04em}
@@ -82,9 +90,13 @@ tr:hover td{background:var(--pk-light)}
 .ch{background:var(--pk);padding:.65rem .9rem}.cht{font-size:12px;font-weight:600;color:white}
 .chs{font-size:10px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:4px;margin-top:2px}
 .dg{width:5px;height:5px;border-radius:50%;background:#9FE1CB}
-.cm{flex:1;padding:.8rem;overflow-y:auto;display:flex;flex-direction:column;gap:10px;flex:1;overflow-y:auto;background:var(--bg2)}
-.msg{display:flex;gap:7px;align-items:flex-end}.msg.user{flex-direction:row-reverse}
-.bub{max-width:94%;padding:.65rem .9rem;border-radius:12px;font-size:12px;line-height:1.75;word-break:break-word}
+.cm{padding:.8rem;overflow-y:auto;flex:1 1 0;min-height:0;display:flex;flex-direction:column;gap:10px;background:var(--bg2);scroll-behavior:smooth}
+.qa{padding:.5rem .8rem;border-top:1px solid var(--pk-mid);background:var(--pk-light);display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0}
+.ir{display:flex;gap:7px;padding:.65rem .8rem;background:var(--bg);border-top:1px solid var(--border);align-items:flex-end;flex-shrink:0}
+.scroll-btn{position:absolute;bottom:100px;right:10px;width:30px;height:30px;border-radius:50%;background:var(--pk);color:white;border:none;cursor:pointer;display:none;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(232,49,90,.4);z-index:20;line-height:1}
+.scroll-btn.show{display:flex}
+.msg{display:flex;gap:7px;align-items:flex-end;flex-shrink:0;width:100%}.msg.user{flex-direction:row-reverse}
+.bub{max-width:85%;padding:.65rem .9rem;border-radius:12px;font-size:12px;line-height:1.75;word-break:break-word;white-space:pre-wrap;flex-shrink:1}
 .msg.ai .bub{background:var(--bg);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:3px}
 .msg.user .bub{background:var(--pk);color:white;border-bottom-right-radius:3px}
 .mav{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
@@ -97,15 +109,60 @@ tr:hover td{background:var(--pk-light)}
 .dots span{width:5px;height:5px;border-radius:50%;background:var(--pk-border);animation:b .9s infinite}
 .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
 @keyframes b{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
-.qa{padding:.5rem .8rem;border-top:1px solid var(--pk-mid);background:var(--pk-light);display:flex;gap:5px;flex-wrap:wrap}
 .qc{padding:4px 9px;border-radius:20px;border:1px solid var(--pk-border);background:var(--bg);font-size:11px;color:var(--pk-dark);cursor:pointer;white-space:nowrap;font-family:inherit}
 .qc:hover{background:var(--pk-mid)}
-.ir{display:flex;gap:7px;padding:.65rem .8rem;background:var(--bg);border-top:1px solid var(--border);align-items:flex-end}
 #ci{flex:1;border:1px solid var(--border2);border-radius:var(--r);padding:6px 10px;font-size:12px;resize:none;height:32px;max-height:80px;background:var(--bg2);color:var(--text);font-family:inherit;outline:none}
 #ci:focus{border-color:var(--pk)}
 #sb{width:32px;height:32px;border-radius:var(--r);border:none;background:var(--pk);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 #sb:hover{opacity:.88}#sb:disabled{opacity:.4}
 .footer{text-align:center;font-size:11px;color:var(--text3);margin-top:10px}
+
+/* 行事曆 */
+.cal-day-hdr{background:var(--pk-light);padding:5px 0;text-align:center;font-size:11px;font-weight:600;color:var(--pk-dark);border-right:1px solid var(--border)}
+.cal-cell{min-height:60px;padding:3px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);vertical-align:top;cursor:pointer}
+.cal-cell:hover{background:var(--pk-light)}
+.cal-cell.other-m .cal-dn{color:var(--text3)}
+.cal-cell.today-c{background:var(--pk-light)}
+.cal-dn{font-size:11px;font-weight:600;color:var(--text);width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.cal-cell.today-c .cal-dn{background:var(--pk);color:white;border-radius:50%}
+.ev-dot{font-size:10px;padding:1px 4px;border-radius:3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev-eval{background:#EAF3DE;color:#27500A}
+.ev-meeting{background:#E6F1FB;color:#0C447C}
+.ev-other{background:var(--pk-light);color:var(--pk-dark)}
+/* 已讀功能 */
+.checkin-row{display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid var(--border);margin-top:4px;flex-wrap:wrap}
+.checkin-btn{padding:4px 12px;border-radius:var(--r);border:1px solid var(--pk);background:var(--pk);color:white;font-size:11px;cursor:pointer;font-family:inherit}
+.checkin-btn.done{background:#EAFAF1;border-color:#A9DFBF;color:#1a5c35;cursor:default}
+.readers-wrap{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.reader-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;background:var(--pk-light);font-size:11px;color:var(--pk-dark)}
+/* 近期活動 */
+.ev-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.ev-item:last-child{border-bottom:none}
+.ev-badge{width:34px;text-align:center;flex-shrink:0}
+.ev-badge-m{font-size:10px;color:var(--text2)}
+.ev-badge-d{font-size:17px;font-weight:600;color:var(--text);line-height:1}
+.ev-info-title{font-size:12px;font-weight:600;color:var(--text)}
+.ev-info-note{font-size:11px;color:var(--text2);margin-top:1px}
+.ev-tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:20px;margin-left:5px}
+.ev-del{font-size:11px;color:var(--text3);cursor:pointer;padding:2px 5px;border-radius:3px;border:none;background:none;font-family:inherit;margin-left:auto;flex-shrink:0}
+.ev-del:hover{background:var(--pk-light);color:var(--pk)}
+/* Name modal */
+.nm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.nm-overlay.open{display:flex}
+.nm-box{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:280px;border:1px solid var(--border)}
+.nm-box h3{font-size:14px;font-weight:600;margin-bottom:.5rem;color:var(--text)}
+.nm-box p{font-size:12px;color:var(--text2);margin-bottom:1rem}
+.nm-box input{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:13px;font-family:inherit;background:var(--bg2);color:var(--text);margin-bottom:10px}
+.nm-box input:focus{outline:none;border-color:var(--pk)}
+.nm-btns{display:flex;gap:8px}
+.nm-ok{flex:1;padding:8px;background:var(--pk);color:white;border:none;border-radius:var(--r);font-size:13px;cursor:pointer;font-family:inherit}
+.nm-cancel{padding:8px 14px;background:transparent;border:1px solid var(--border2);border-radius:var(--r);font-size:13px;cursor:pointer;font-family:inherit;color:var(--text2)}
+/* Cal modal */
+.cal-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.cal-modal-overlay.open{display:flex}
+.cal-modal-box{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:290px;border:1px solid var(--border)}
+.cal-modal-box h3{font-size:14px;font-weight:600;margin-bottom:1rem;color:var(--text)}
+
 </style>
 </head>
 <body>
@@ -116,14 +173,13 @@ tr:hover td{background:var(--pk-light)}
 </div>
 <div class="tabs">
   <button class="tb on" onclick="showTab('notice',this)">📌 公告欄</button>
+  <button class="tb" onclick="showTab('cal',this)">📅 行事曆</button>
   <button class="tb" onclick="showTab('welfare',this)">員工福利</button>
   <button class="tb" onclick="showTab('leave',this)">請假與出勤</button>
   <button class="tb" onclick="showTab('eval',this)">📊 考核標準</button>
   <button class="tb" onclick="showTab('bonus',this)">💰 獎金制度</button>
   <button class="tb" onclick="showTab('org',this)">組織架構</button>
-  <button class="tb" onclick="showTab('onboard',this)">新人報到</button>
   <button class="tb" onclick="showTab('clock',this)">打卡系統</button>
-  <button class="tb" onclick="showTab('labor',this)">⚖️ 勞基法重點</button>
   <button class="tb" onclick="showTab('complaint',this)">💬 我有話想說</button>
 </div>
 <div class="main">
@@ -132,19 +188,39 @@ tr:hover td{background:var(--pk-light)}
 <!-- 公告欄 -->
 <div class="sec on" id="sec-notice">
   <div class="stitle">公告欄</div>
-  <div class="ib bl">人資部可在此發布最新公告，同仁即時查閱。</div>
+  <div class="ib bl">人資部可在此發布最新公告，同仁可即時查閱並簽到確認已讀。公告儲存在瀏覽器，可隨時新增或刪除。</div>
+
   <div class="ssub">發布新公告（人資專用）</div>
   <div class="na">
     <input type="text" id="ni" placeholder="輸入公告內容…" onkeydown="if(event.key==='Enter')addNotice()"/>
     <button class="nab" onclick="addNotice()">＋ 發布</button>
   </div>
+
   <div class="ssub">最新公告</div>
-  <div id="nl">
-    <div class="ni"><div class="nd"></div><div class="nc"><div class="nt">歡迎使用安橋 HR 人資資訊系統！如有問題可使用右側 AI 助理，或至申訴窗口提出建議。<span class="npin">置頂</span></div><div class="nm">人資部 · 2026/04/28</div></div></div>
-    <div class="ni"><div class="nd"></div><div class="nc"><div class="nt">工作規則已於 114 年 05 月更新，請同仁留意假別及獎懲相關規定。</div><div class="nm">人資部 · 2026/04/28</div></div></div>
-  </div>
+  <div id="nl"></div>
 </div>
 
+<!-- 行事曆 -->
+<div class="sec" id="sec-cal">
+  <div class="stitle">📅 人資行事曆</div>
+  <div class="ib bl">人資可新增考核、會議等重要日期，同仁一目瞭然。</div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="nab" style="padding:5px 10px;font-size:12px" onclick="changeMonth(-1)">‹</button>
+      <span id="cal-title" style="font-size:14px;font-weight:600;color:var(--text)"></span>
+      <button class="nab" style="padding:5px 10px;font-size:12px" onclick="changeMonth(1)">›</button>
+    </div>
+    <button class="nab" onclick="openCalModal()">＋ 新增活動</button>
+  </div>
+
+  <div class="tw" style="margin-bottom:1rem">
+    <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);border-collapse:collapse"></div>
+  </div>
+
+  <div class="ssub">近期活動</div>
+  <div id="upcoming-list"></div>
+</div>
 <!-- 員工福利 -->
 <div class="sec" id="sec-welfare">
   <div class="stitle">員工福利介紹</div>
@@ -165,7 +241,7 @@ tr:hover td{background:var(--pk-light)}
       <tr><td>運動津貼</td><td>每月上限 NT$500</td><td>含統編發票或大小章收據（不含器材衣物）</td></tr>
       <tr><td>生育津貼</td><td>NT$2,000（以胎次計）</td><td>出生證明</td></tr>
       <tr><td>結婚津貼</td><td>NT$3,600</td><td>身分證正反面＋戶口名簿</td></tr>
-      <tr><td>喪葬津貼</td><td>NT$2,500</td><td>正本訃聞（向人資申請）</td></tr>
+      <tr><td>喪葬津貼</td><td>NT$2,500</td><td>正本訃聞（向人資申請）<br><span style="color:var(--text2);font-size:11px">※ 適用對象：直系親屬與配偶</span></td></tr>
     </tbody>
   </table></div>
   <div class="ib">員購網：到職 1–3 天內人資協助建立帳號，員購金效期三個月。</div>
@@ -226,7 +302,7 @@ tr:hover td{background:var(--pk-light)}
     <div class="oc"></div>
     <div class="olv" style="gap:5px">
       <div class="on2"><div class="on">南_B部</div><div class="or">郭品君 副理</div></div>
-      <div class="on2"><div class="on">話術培訓部</div><div class="or">楊凱涵 專員</div></div>
+      <div class="on2"><div class="on">話術培訓部</div><div class="or">楊凱涵 儲備講師</div></div>
       <div class="on2"><div class="on">客服A部</div><div class="or">莊雯淇 組長</div></div>
       <div class="on2"><div class="on">客服B部</div><div class="or">陳姿吟 組長</div></div>
     </div>
@@ -234,33 +310,11 @@ tr:hover td{background:var(--pk-light)}
   <div class="ssub" style="margin-top:1rem">電銷處 南_B部 專員</div>
   <div class="ib">洪欣伶、楊凱涵、黃于倢、傅雅筠、李懿倉、李培榕</div>
   <div class="ssub">培訓處 話術培訓部</div>
-  <div class="ib">楊凱涵 專員</div>
+  <div class="ib">楊凱涵 儲備講師</div>
   <div class="ssub">客服A部</div>
   <div class="ib">莊雯淇 組長｜南_A部：邱靜怡 專員、吳秀燕 專員</div>
   <div class="ssub">客服B部</div>
   <div class="ib">陳姿吟 組長｜南_B部：洪淑秋 專員</div>
-</div>
-
-<!-- 新人報到 -->
-<div class="sec" id="sec-onboard">
-  <div class="stitle">新人報到流程</div>
-  <div class="ssub">辦公室地址</div>
-  <div class="tw"><table>
-    <thead><tr><th>地點</th><th>地址</th></tr></thead>
-    <tbody>
-      <tr><td>火星總公司</td><td>新北市中和區板南路 655 號 13 樓</td></tr>
-      <tr><td>營業處＋安橋北部</td><td>新北市中和區板南路 669 號 15 樓</td></tr>
-      <tr><td>安橋高雄辦公室</td><td>高雄市左營區博愛三路 12 號 17 樓-1</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ssub">報到步驟</div>
-  <div class="sr"><div class="sn">1</div><div><div class="st">公司環境介紹</div><div class="sd">認識集團品牌（TAIZAKU、樹飛雪、inyouso、DIU+、黛后、瑞丹絲）與各辦公室位置</div></div></div>
-  <div class="sr"><div class="sn">2</div><div><div class="st">組織圖介紹</div><div class="sd">了解 ANB 安橋架構及各處負責人</div></div></div>
-  <div class="sr"><div class="sn">3</div><div><div class="st">行政事項</div><div class="sd">加入 Line 公告群組，1–3 天內建立員購帳號</div></div></div>
-  <div class="sr"><div class="sn">4</div><div><div class="st">考勤方式</div><div class="sd">設定鼎新打卡系統（Line 官方帳號連動工號）</div></div></div>
-  <div class="sr"><div class="sn">5</div><div><div class="st">員工福利</div><div class="sd">了解員購金、禮金、各項津貼</div></div></div>
-  <div class="ssub">報到應備文件</div>
-  <div class="ib">新進人員報到通知信所載文件、員工基本資料表、國民身分證（核對後發還）、保密合約、個人資料蒐集告知條款及同意書</div>
 </div>
 
 <!-- 打卡系統 -->
@@ -287,17 +341,17 @@ tr:hover td{background:var(--pk-light)}
 <div class="sec" id="sec-complaint">
   <div class="stitle">💬 我有話想說</div>
   <div class="ib gr">這裡是一個安全、溫暖的空間。不論是工作上的建議、生活上的困擾，或任何想讓主管知道的事，都歡迎你說出來。我們重視每位同仁的聲音。</div>
-  <div class="ib yw">🔒 所有內容均保密處理，公司絕對禁止對反映意見的同仁有任何不利對待。信件將統一寄至人資組長莊雯淇，並依您選擇的收件對象轉達。</div>
+  <div class="ib yw">🔒 所有內容均保密處理，公司絕對禁止對反映意見的同仁有任何不利對待。</div>
   <div class="ssub">選擇想傾訴的對象</div>
   <div class="cg2">
     <div class="cc"><div class="ci2">👩‍💼</div><div class="ct">總經理 魏千惠</div><div class="cin">適合：重大事項、跨部門問題</div></div>
-    <div class="cc"><div class="ci2">👩‍💻</div><div class="ct">人資組長 莊雯淇</div><div class="cin">適合：HR事務、福利、制度</div></div>
+    <div class="cc"><div class="ci2">📚</div><div class="ct">培訓副理 蔡秋月</div><div class="cin">適合：培訓、學習相關問題</div></div>
     <div class="cc"><div class="ci2">📱</div><div class="ct">電銷副理 郭品君</div><div class="cin">適合：電銷相關、業務問題</div></div>
     <div class="cc"><div class="ci2">🎧</div><div class="ct">客服副理 洪婉瑜</div><div class="cin">適合：客服相關、服務問題</div></div>
-    <div class="cc"><div class="ci2">📚</div><div class="ct">培訓副理 蔡秋月</div><div class="cin">適合：培訓、學習相關問題</div></div>
     <div class="cc"><div class="ci2">💼</div><div class="ct">財務組長 陳姿吟</div><div class="cin">適合：財務、報表相關問題</div></div>
+    <div class="cc"><div class="ci2">👩‍💻</div><div class="ct">人資組長 莊雯淇</div><div class="cin">適合：HR事務、福利、制度</div></div>
   </div>
-  <div class="ssub">線上表單（直接寄送到人資信箱）</div>
+  <div class="ssub">線上表單</div>
   <div id="cf">
     <div class="fg">
       <label class="fl">想說給誰聽？ <span style="color:var(--pk)">*</span></label>
@@ -305,8 +359,8 @@ tr:hover td{background:var(--pk-light)}
         <option value="">請選擇收件對象…</option>
         <option value="總經理 魏千惠">總經理 魏千惠</option>
         <option value="培訓副理 蔡秋月">培訓副理 蔡秋月</option>
-        <option value="客服副理 洪婉瑜">客服副理 洪婉瑜</option>
         <option value="電銷副理 郭品君">電銷副理 郭品君</option>
+        <option value="客服副理 洪婉瑜">客服副理 洪婉瑜</option>
         <option value="財務組長 陳姿吟">財務組長 陳姿吟</option>
         <option value="人資組長 莊雯淇">人資組長 莊雯淇</option>
       </select>
@@ -333,16 +387,80 @@ tr:hover td{background:var(--pk-light)}
       <textarea class="ft" id="ccontent" placeholder="請放心說出您的想法，這裡是安全的空間…" style="min-height:100px"></textarea>
     </div>
     <button class="fb" id="csend" onclick="submitC()">送出 💌</button>
-    <div class="fn">※ 填寫完成後系統會自動寄信，不需要另外開啟郵件程式。</div>
   </div>
-  <div class="sok" id="sok">💌 感謝您願意說出心聲！<br>信件已成功寄出，我們會認真看待每一份回饋，並在 2 個工作日內給您回應。</div>
-  <div class="sok" id="sok-err" style="background:#FEF2F2;border-color:#FECACA;color:#991B1B;display:none;">❌ 寄送失敗，請稍後再試。</div>
+  <div id="sok" style="display:none;text-align:center;padding:1.5rem;background:#EAFAF1;border:1px solid #A9DFBF;border-radius:10px;color:#1a5c35">
+    <div style="font-size:24px;margin-bottom:8px">💌</div>
+    <div style="font-weight:600;font-size:14px;margin-bottom:6px">信件已成功寄出！</div>
+    <div style="font-size:12px;opacity:.8;margin-bottom:14px">感謝您願意說出心聲，我們會認真看待每一份回饋。</div>
+    <button onclick="document.getElementById('sok').style.display='none';document.getElementById('cf').style.display='block';document.getElementById('csend').textContent='送出 💌';document.getElementById('csend').disabled=false;" style="background:none;border:1px solid #A9DFBF;border-radius:6px;padding:6px 16px;font-size:12px;cursor:pointer;color:#1a5c35">← 再次填寫</button>
+  </div>
 </div>
 
 <!-- 考核標準 -->
 <div class="sec" id="sec-eval">
   <div class="stitle">📊 年度考核標準（115年度）</div>
   <div class="ib bl">每月由主管評分，年終加總計算平均成績作為考核依據。</div>
+
+  <!-- 電銷 -->
+  <div class="ssub" style="background:var(--pk);color:white;padding:6px 12px;border-radius:6px;margin-bottom:10px">📱 電銷處</div>
+
+  <div class="ssub">電銷專員</div>
+  <div class="cg">
+    <div class="card"><div class="lbl">業績 KPI</div><div class="val">40%</div></div>
+    <div class="card"><div class="lbl">話術技巧</div><div class="val">15%</div></div>
+    <div class="card"><div class="lbl">培客能力</div><div class="val">10%</div></div>
+    <div class="card"><div class="lbl">敬業態度＆文書</div><div class="val">10%</div></div>
+    <div class="card"><div class="lbl">專業</div><div class="val">15%</div></div>
+    <div class="card"><div class="lbl">出缺勤</div><div class="val">10%</div></div>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>考核類別</th><th>細項與占比</th></tr></thead>
+    <tbody>
+      <tr><td>業績 KPI 40%</td><td>業績20%、通時/通數各5%、平均訂單5%、成交率5%</td></tr>
+      <tr><td>話術技巧 15%</td><td>話術評比10%（五架構/搜身/締結）、音檔自我學習5%</td></tr>
+      <tr><td>培客能力 10%</td><td>713回訪率5%、回購客VIP人數5%</td></tr>
+      <tr><td>敬業態度＆文書 10%</td><td>電腦文書/基本職能、歷程備註、上線管理、報表、工作落實、團隊合作、正向態度</td></tr>
+      <tr><td>專業 15%</td><td>電銷考試13%、補考次數2%（逢618/雙11暫停，KPI改35%）</td></tr>
+      <tr><td>出缺勤 10%</td><td>遲到/忘打卡每次-0.5分；病假4H內-0.5/日-1；事假4H內-0.5/日-2；曠職-10</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="ssub">KPI 業績評分細表</div>
+  <div class="tw"><table>
+    <thead><tr><th>業績達成率</th><th>得分（滿分20）</th><th>通時+通數（滿分10）</th><th>平均訂單（滿分5）</th><th>成交率（滿分5）</th></tr></thead>
+    <tbody>
+      <tr><td>69%以下</td><td>0–5</td><td rowspan="6" style="vertical-align:middle;text-align:center">59%以下→1<br>60-79%→2<br>80-99%→4<br>100-109%→6<br>110-119%→8<br>120%以上→10</td><td rowspan="6" style="vertical-align:middle;text-align:center">2500↑→1<br>3500↑→2<br>4000↑→3<br>5000↑→4<br>6000↑→5</td><td rowspan="6" style="vertical-align:middle;text-align:center">6-7%→1<br>8-9%→2<br>10-11%→3<br>12-13%→4<br>14%↑→5</td></tr>
+      <tr><td>70–79%</td><td>7</td></tr>
+      <tr><td>80–89%</td><td>10</td></tr>
+      <tr><td>90–99%</td><td>11</td></tr>
+      <tr><td>100–124%</td><td>13</td></tr>
+      <tr><td>125–149%</td><td>15</td></tr>
+      <tr><td>150–174%</td><td>18</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>175–199%</td><td>19</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>200%以上</td><td>20</td><td>—</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="ssub">話術組</div>
+  <div class="tw"><table>
+    <thead><tr><th>考核類別</th><th>細項與占比</th></tr></thead>
+    <tbody>
+      <tr><td>話術評比 10%</td><td>話術引導技巧3%、新人/落後輔導3%、專業修正正確性2%、工作達成準時性2%（每週5通音檔）</td></tr>
+      <tr><td>抽聽音檔 5%</td><td>31-35通→5分；25-30通→4分；20通→3分</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="ssub">電銷副理</div>
+  <div class="tw"><table>
+    <thead><tr><th>考核類別</th><th>細項與占比</th></tr></thead>
+    <tbody>
+      <tr><td>庶務技巧 10%</td><td>事務掌控/早會/活動佈達4%、輔導專員上線能力4%、每日案件清單分析2%</td></tr>
+      <tr><td>抽聽音檔 5%</td><td>12通→5分；10通→4分；8通→3分</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- 客服 -->
+  <div class="ssub" style="background:var(--pk);color:white;padding:6px 12px;border-radius:6px;margin-top:18px;margin-bottom:10px">🎧 支援客服部</div>
 
   <div class="ssub">人資組長 莊雯淇</div>
   <div class="cg">
@@ -355,19 +473,19 @@ tr:hover td{background:var(--pk-light)}
   <div class="tw"><table>
     <thead><tr><th>考核類別</th><th>細項</th></tr></thead>
     <tbody>
-      <tr><td>人資管理 20%</td><td>人資庶務（10%）、名單管理（10%）</td></tr>
-      <tr><td>客服管理＆基本職能 30%</td><td>客服電話/文字專業、行政能力、系統應用（各10%）</td></tr>
-      <tr><td>敬業態度 20%</td><td>團隊合作互助幫忙（10%）、工作落實度（10%）</td></tr>
-      <tr><td>出缺勤 10%</td><td>遲到早退、病假、事假、曠職</td></tr>
-      <tr><td>主管管理 20%</td><td>團隊正向鼓舞（10%）、團隊管控能力（10%）</td></tr>
+      <tr><td>人資管理 20%</td><td>人資庶務10%、名單管理10%（由安琪拉評核）</td></tr>
+      <tr><td>客服管理＆基本職能 30%</td><td>客服電話/文字專業10%、行政能力10%（平台回覆/案件追蹤）、系統應用10%（名單系統/平台搜尋）</td></tr>
+      <tr><td>敬業態度 20%</td><td>團隊合作互助10%、工作落實度10%</td></tr>
+      <tr><td>出缺勤 10%</td><td>依安橋規範出勤評分</td></tr>
+      <tr><td>主管管理 20%</td><td>正向鼓舞10%、團隊管控能力10%</td></tr>
     </tbody>
   </table></div>
 
   <div class="ssub">財務組長 陳姿吟</div>
   <div class="cg">
-    <div class="card"><div class="lbl">財務報表專業職能</div><div class="val">50%</div></div>
+    <div class="card"><div class="lbl">財務報表專業</div><div class="val">50%</div></div>
     <div class="card"><div class="lbl">客服管理</div><div class="val">10%</div></div>
-    <div class="card"><div class="lbl">其他業務拓展</div><div class="val">5%</div></div>
+    <div class="card"><div class="lbl">業務拓展</div><div class="val">5%</div></div>
     <div class="card"><div class="lbl">敬業態度</div><div class="val">15%</div></div>
     <div class="card"><div class="lbl">出缺勤</div><div class="val">10%</div></div>
     <div class="card"><div class="lbl">主管管理</div><div class="val">10%</div></div>
@@ -375,16 +493,16 @@ tr:hover td{background:var(--pk-light)}
   <div class="tw"><table>
     <thead><tr><th>考核類別</th><th>細項</th></tr></thead>
     <tbody>
-      <tr><td>財務報表專業職能 50%</td><td>各品牌報表良率、系統應用、行政能力、合約追蹤文書管理、異議處理（各10%）</td></tr>
-      <tr><td>客服管理 10%</td><td>客服電話/文字專業</td></tr>
-      <tr><td>其他業務拓展 5%</td><td>特殊專案承接/支援</td></tr>
-      <tr><td>敬業態度 15%</td><td>團隊合作互助（10%）、工作落實度（5%）</td></tr>
-      <tr><td>出缺勤 10%</td><td>遲到早退、病假、事假、曠職</td></tr>
-      <tr><td>主管管理 10%</td><td>團隊管控能力、應變處理能力（各5%）</td></tr>
+      <tr><td>財務報表專業 50%</td><td>各品牌報表良率10%、系統應用10%、行政能力10%、合約追蹤文書10%、報表異議處理10%（由安琪拉評核）</td></tr>
+      <tr><td>客服管理 10%</td><td>客服電話/文字專業、進線/平台庶務支援</td></tr>
+      <tr><td>業務拓展 5%</td><td>特殊專案承接/支援</td></tr>
+      <tr><td>敬業態度 15%</td><td>團隊合作10%、工作落實度5%</td></tr>
+      <tr><td>出缺勤 10%</td><td>依安橋規範出勤評分</td></tr>
+      <tr><td>主管管理 10%</td><td>團隊管控能力5%、應變處理能力5%</td></tr>
     </tbody>
   </table></div>
 
-  <div class="ssub">客服專員 邱靜怡</div>
+  <div class="ssub">客服專員A 邱靜怡</div>
   <div class="cg">
     <div class="card"><div class="lbl">專業</div><div class="val">15%</div></div>
     <div class="card"><div class="lbl">業績 KPI</div><div class="val">35%</div></div>
@@ -395,15 +513,28 @@ tr:hover td{background:var(--pk-light)}
   <div class="tw"><table>
     <thead><tr><th>考核類別</th><th>細項</th></tr></thead>
     <tbody>
-      <tr><td>專業 15%</td><td>考試成績13%、補考次數2%（逢618/雙11暫停，KPI調整為35%）</td></tr>
-      <tr><td>業績 KPI 35%</td><td>業績達成率20%、通數達成率10%、平均訂單5%</td></tr>
-      <tr><td>話術文書＆基本職能 30%</td><td>話術技巧（搜身/養客/締結）、客服電話/文字專業、問題解決系統應用（各10%）</td></tr>
-      <tr><td>敬業態度 10%</td><td>團隊合作互助（5%）、工作落實度（5%）</td></tr>
-      <tr><td>出缺勤 10%</td><td>遲到早退、病假、事假、曠職</td></tr>
+      <tr><td>專業 15%</td><td>考試成績13%、補考次數2%（逢618/雙11暫停，KPI改35%；由培訓組蔡秋月評核，主軸：藥師健生活）</td></tr>
+      <tr><td>業績 KPI 35%</td><td>業績達成率20%、通數達成率10%、平均客單5%</td></tr>
+      <tr><td>話術文書＆基本職能 30%</td><td>話術技巧/締結10%、平台應對行政能力10%、問題解決系統應用10%</td></tr>
+      <tr><td>敬業態度 10%</td><td>團隊合作10%、工作落實度5%</td></tr>
+      <tr><td>出缺勤 10%</td><td>依安橋規範出勤評分</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tw"><table>
+    <thead><tr><th>業績達成率（20分）</th><th>得分</th><th>通數達成率（10分）</th><th>得分</th><th>平均客單（5分）</th><th>得分</th></tr></thead>
+    <tbody>
+      <tr><td>0–19%</td><td>1</td><td>0–29%</td><td>1</td><td>3000以上</td><td>1</td></tr>
+      <tr><td>20–50%</td><td>5</td><td>90–100%</td><td>10</td><td>3500以上</td><td>2</td></tr>
+      <tr><td>51–60%</td><td>10</td><td>—</td><td>—</td><td>4000以上</td><td>3</td></tr>
+      <tr><td>91–99%</td><td>13</td><td>—</td><td>—</td><td>4500以上</td><td>4</td></tr>
+      <tr><td>100%</td><td>14</td><td>—</td><td>—</td><td>5000以上</td><td>5</td></tr>
+      <tr><td>101–130%</td><td>15–17</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>131–150%</td><td>18–19</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>超過150%</td><td>20</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
     </tbody>
   </table></div>
 
-  <div class="ssub">客服行政 吳秀燕</div>
+  <div class="ssub">客服專員B 吳秀燕</div>
   <div class="cg">
     <div class="card"><div class="lbl">專業</div><div class="val">10%</div></div>
     <div class="card"><div class="lbl">客服行政/業務拓展</div><div class="val">60%</div></div>
@@ -413,14 +544,14 @@ tr:hover td{background:var(--pk-light)}
   <div class="tw"><table>
     <thead><tr><th>考核類別</th><th>細項</th></tr></thead>
     <tbody>
-      <tr><td>專業 10%</td><td>考試成績8%、補考次數2%（115/7M品牌專業由培訓組蔡秋月評核）</td></tr>
-      <tr><td>客服行政/業務拓展 60%</td><td>客服電話/文字專業、問題解決系統應用、交辦事務效率、行政處理細心度、特殊專案支援（各12%）</td></tr>
-      <tr><td>敬業態度 20%</td><td>團隊合作/互助（10%）、工作落實度（10%）</td></tr>
-      <tr><td>出缺勤 10%</td><td>遲到早退、病假、事假、曠職</td></tr>
+      <tr><td>專業 10%</td><td>考試成績8%、補考次數2%（由培訓組蔡秋月評核，主軸：BFFECT）</td></tr>
+      <tr><td>客服行政/業務拓展 60%</td><td>客服電話/文字專業20%、問題解決系統應用15%、交辦事務效率10%、行政處理細心度10%、特殊專案支援10%</td></tr>
+      <tr><td>敬業態度 20%</td><td>團隊合作/互助10%、工作落實度10%</td></tr>
+      <tr><td>出缺勤 10%</td><td>依安橋規範出勤評分</td></tr>
     </tbody>
   </table></div>
 
-  <div class="ssub">客服行政 洪淑秋</div>
+  <div class="ssub">行政專員 洪淑秋</div>
   <div class="cg">
     <div class="card"><div class="lbl">行政文書＆基本職能</div><div class="val">55%</div></div>
     <div class="card"><div class="lbl">敬業態度</div><div class="val">35%</div></div>
@@ -429,17 +560,18 @@ tr:hover td{background:var(--pk-light)}
   <div class="tw"><table>
     <thead><tr><th>考核類別</th><th>細項</th></tr></thead>
     <tbody>
-      <tr><td>行政文書＆基本職能 55%</td><td>行政業務執行力10%、系統應用10%、交辦事務效率15%、異議處理10%、機動支援職能擴充10%</td></tr>
-      <tr><td>敬業態度 35%</td><td>團隊合作互助10%、資源控管10%、跨部門溝通5%、工作落實度10%</td></tr>
-      <tr><td>出缺勤 10%</td><td>遲到早退、病假、事假、曠職</td></tr>
+      <tr><td>行政文書＆基本職能 55%</td><td>業務執行力10%、系統應用10%、交辦事務效率15%、異議處理10%、機動支援/職能擴充10%</td></tr>
+      <tr><td>敬業態度 35%</td><td>團隊合作10%、資源控管10%、跨部門溝通5%、工作落實度10%</td></tr>
+      <tr><td>出缺勤 10%</td><td>依安橋規範出勤評分</td></tr>
     </tbody>
   </table></div>
+
   <div class="ib yw">📌 如有疑問請洽人資組長莊雯淇。</div>
 </div>
 <!-- 獎金制度 -->
 <div class="sec" id="sec-bonus">
-  <div class="stitle">💰 獎金制度（114年8月起適用）</div>
-  <div class="ib bl">以下獎金適用全職客電銷專員與管理主管。兼職PT人員依專屬制度計算，不與正職並行。</div>
+  <div class="stitle">💰 獎金制度（2026年1月起適用）</div>
+  <div class="ib bl">適用對象：全職客電銷專員與管理主管（獎金表一～八）。特約電銷人員依獎金表九計算。</div>
 
   <div class="ssub">一、月業績獎金（個人）</div>
   <div class="ib yw">條件：業績達成率 80% 以上＋通時達成率 100%＋通數達成率 100%</div>
@@ -453,6 +585,7 @@ tr:hover td{background:var(--pk-light)}
       <tr><td>150%</td><td>5.00%</td></tr>
       <tr><td>175%</td><td>7.00%</td></tr>
       <tr><td>200%</td><td>8.00%</td></tr>
+      <tr><td>300%</td><td>9.00%</td></tr>
     </tbody>
   </table></div>
 
@@ -475,9 +608,9 @@ tr:hover td{background:var(--pk-light)}
       <tr><td>NT$100,000 以上</td><td>$3,000</td><td>$15,000</td><td>$30,000</td></tr>
     </tbody>
   </table></div>
-  <div class="ib yw">※ 累計 5 單與 10 單取其高，不累計加發。惡意拆單不列入並取消資格。</div>
+  <div class="ib yw">※ 單筆達萬元以上依階另加發，月結算。累計 5 單與 10 單取其高，不累計加發。惡意拆單不列入並取消資格。</div>
 
-  <div class="ssub">四、季達標獎金（個人）</div>
+  <div class="ssub">四、季個人達標獎金</div>
   <div class="ib">每季（3/6/9/12月）結算，次月發放。三個月加總達成率 100% 以上依階加發。</div>
   <div class="tw"><table>
     <thead><tr><th>達標條件</th><th>獎金</th></tr></thead>
@@ -490,7 +623,21 @@ tr:hover td{background:var(--pk-light)}
     </tbody>
   </table></div>
 
-  <div class="ssub">五、新人王獎金（到職首年）</div>
+  <div class="ssub">五、季團隊達標獎金（聚餐獎金）</div>
+  <div class="tw"><table>
+    <thead><tr><th>團隊業績達成率（季）</th><th>聚餐獎金（每人）</th></tr></thead>
+    <tbody>
+      <tr><td>100%</td><td>NT$500</td></tr>
+      <tr><td>125%</td><td>NT$800</td></tr>
+      <tr><td>150%</td><td>NT$1,200</td></tr>
+      <tr><td>175%</td><td>NT$2,000</td></tr>
+      <tr><td>200%</td><td>NT$3,000</td></tr>
+    </tbody>
+  </table></div>
+  <div class="ib yw">※ 須實際有團聚行為，季結算後 2 個月內憑發票（標統編）申請。依達標階計算，不得超過每人額度上限。統一由主管代墊後向公司申請費用。</div>
+
+  <div class="ssub">六、新人王獎金（到職首年）</div>
+  <div class="ib">前 6 個月業績平均達 100% 以上額外加發，後 6 個月再達標再加發。</div>
   <div class="tw"><table>
     <thead><tr><th>時間</th><th>達成 100%</th><th>達成 150%</th><th>達成 200%</th></tr></thead>
     <tbody>
@@ -499,60 +646,29 @@ tr:hover td{background:var(--pk-light)}
     </tbody>
   </table></div>
 
-  <div class="ssub">六、年度分紅獎勵（計算期間：114/2 ～ 115/1）</div>
-  <div class="ib yw">條件：通時達成率 80% 以上＋通數達成率 80% 以上</div>
+  <div class="ssub">七、年度分紅獎勵（計算期間：115/2 ～ 116/1）</div>
+  <div class="ib yw">條件：通時達成率 80% 以上＋通數達成率 80% 以上。退貨與取消訂單不列入。</div>
   <div class="tw"><table>
-    <thead><tr><th>階數</th><th>年度個人總業績</th></tr></thead>
+    <thead><tr><th>階數</th><th>年度個人總業績</th><th>分紅獎金%</th></tr></thead>
     <tbody>
-      <tr><td>第一階</td><td>NT$4,000,000</td></tr>
-      <tr><td>第二階</td><td>NT$5,000,000</td></tr>
-      <tr><td>第三階</td><td>NT$6,000,000</td></tr>
-      <tr><td>第四階</td><td>NT$7,000,000</td></tr>
-      <tr><td>第五階</td><td>NT$8,000,000</td></tr>
-      <tr><td>第六階</td><td>NT$10,000,000</td></tr>
+      <tr><td>第一階</td><td>NT$4,000,000</td><td>0.3%</td></tr>
+      <tr><td>第二階</td><td>NT$5,000,000</td><td>0.8%</td></tr>
+      <tr><td>第三階</td><td>NT$6,000,000</td><td>1.5%</td></tr>
+      <tr><td>第四階</td><td>NT$7,000,000</td><td>1.8%</td></tr>
+      <tr><td>第五階</td><td>NT$8,000,000</td><td>2.0%</td></tr>
+      <tr><td>第六階</td><td>NT$10,000,000</td><td>3.0%</td></tr>
     </tbody>
   </table></div>
-  <div class="ib yw">※ 結算前離職視同放棄獎金資格。獎金走簽呈依公告日發放。</div>
-
-  <div class="ssub">七、主管團隊月獎金</div>
-  <div class="ib">需管理至少兩位績效人員以上才適用。</div>
-  <div class="tw"><table>
-    <thead><tr><th>業績達成率</th><th>郭品君（電銷副理）</th><th>洪婉瑜（客服副理）</th><th>蔡秋月（培訓主管）</th></tr></thead>
-    <tbody>
-      <tr><td>80%</td><td>0.15%</td><td>0.40%</td><td>0.08%</td></tr>
-      <tr><td>90%</td><td>0.20%</td><td>0.50%</td><td>0.10%</td></tr>
-      <tr><td>100%</td><td>0.30%</td><td>0.80%</td><td>0.15%</td></tr>
-      <tr><td>125%</td><td>0.35%</td><td>0.90%</td><td>0.16%</td></tr>
-      <tr><td>150%</td><td>0.45%</td><td>1.00%</td><td>0.18%</td></tr>
-      <tr><td>175%</td><td>0.60%</td><td>1.20%</td><td>0.20%</td></tr>
-      <tr><td>200%</td><td>0.80%</td><td>1.50%</td><td>0.25%</td></tr>
-    </tbody>
-  </table></div>
-  <div class="ib">計算範圍：郭品君→南電銷團隊業績｜洪婉瑜→客服團隊業績｜蔡秋月→全團隊</div>
-
-  <div class="ssub">八、兼職 PT 人員月獎金</div>
-  <div class="ib yw">※ PT專屬制度，不與正職獎金並行。每月基礎40小時以上，每次出勤4小時以上。</div>
-  <div class="tw"><table>
-    <thead><tr><th>階數</th><th>業績門檻</th><th>獎金抽成</th></tr></thead>
-    <tbody>
-      <tr><td>第1階（新到職前3個月）</td><td>NT$100,000</td><td>9%</td></tr>
-      <tr><td>第2階</td><td>NT$150,000</td><td>10%</td></tr>
-      <tr><td>第3階</td><td>NT$200,000</td><td>11%</td></tr>
-      <tr><td>第4階</td><td>NT$250,000</td><td>12%</td></tr>
-      <tr><td>第5階</td><td>NT$300,000</td><td>13%</td></tr>
-      <tr><td>第6階</td><td>NT$500,000</td><td>14%</td></tr>
-      <tr><td>第7階</td><td>NT$600,000</td><td>15%</td></tr>
-      <tr><td>第8階</td><td>NT$1,000,000</td><td>16%</td></tr>
-      <tr><td>第9階</td><td>NT$2,000,000</td><td>17%</td></tr>
-    </tbody>
-  </table></div>
+  <div class="ib yw">※ 結算與獎金發放前離職視同放棄資格。獎金走簽呈依公告日發放。</div>
 </div>
+
 
 </div><!-- ip -->
 
 <!-- Chat -->
 <div class="cp">
   <div class="ch"><div class="cht">🤖 HR AI 助理</div><div class="chs"><span class="dg"></span>即時回答・自動引導頁籤</div></div>
+  <button class="scroll-btn" id="scroll-btn" onclick="scrollToBottom()" title="滾到最新訊息">↓</button>
   <div class="cm" id="cm">
     <div class="msg ai"><div class="mav a">HR</div><div><div class="ml">HR 助理</div><div class="bub">您好！有任何人資問題直接問我，我會回答並帶您到對應頁面 👋</div></div></div>
     <div class="tr2" id="tw" style="display:none"><div class="mav a">HR</div><div class="dots"><span></span><span></span><span></span></div></div>
@@ -571,46 +687,84 @@ tr:hover td{background:var(--pk-light)}
 </div>
 </div>
 </div>
-<div class="footer">安橋股份有限公司 人資部｜申訴專線：0979-132-080｜信箱：opinion@marxbiotech.com</div>
+<div class="footer">安橋股份有限公司 人資部｜© 2026 ANB HR Platform</div>
 <script>
-// API Key 從 localStorage 讀取（不寫死在程式碼裡）
+// API Key 從 localStorage 讀取
 let KEY = localStorage.getItem('anb_api_key') || '';
 
-// 頁面載入時檢查是否有 Key
-window.addEventListener('DOMContentLoaded', function(){
-  if(!KEY){
-    const k = prompt('請輸入 API Key 以啟用 AI 助理（向人資取得）：');
-    if(k && k.startsWith('sk-ant-')){
-      KEY = k;
-      localStorage.setItem('anb_api_key', k);
-    }
+function checkKey(){
+  const k = prompt('請輸入 AI 助理啟用碼（向人資取得）：');
+  if(k && k.trim().startsWith('sk-ant-')){
+    KEY = k.trim();
+    localStorage.setItem('anb_api_key', KEY);
+    return true;
+  } else if(k) {
+    alert('啟用碼格式不正確，請重新確認。');
   }
-});
-const TL={notice:'公告欄',welfare:'員工福利',leave:'請假與出勤',org:'組織架構',onboard:'新人報到',clock:'打卡系統',complaint:'我有話想說',labor:'勞基法重點',eval:'考核標準',bonus:'獎金制度'};
-const TI=['notice','welfare','leave','eval','bonus','org','onboard','clock','labor','complaint'];
-const SYS=`你是安橋股份有限公司HR智能助理。繁體中文，語氣亲切，100字內，必要時條列。絕對不顯示任何電話號碼或信笱地址。最後一行輸出：[TAB:xxx]，xxx選：notice/welfare/leave/eval/bonus/org/onboard/clock/labor/complaint。
+  return false;
+}
+const TL={notice:'公告欄',cal:'行事曆',welfare:'員工福利',leave:'請假與出勤',org:'組織架構',clock:'打卡系統',complaint:'我有話想說',eval:'考核標準',bonus:'獎金制度'};
+const TI=['notice','cal','welfare','leave','eval','bonus','org','onboard','clock','complaint'];
+const SYS=`你是安橋股份有限公司HR智能助理。繁體中文，語氣亲切，100字內，必要時條列。絕對不顯示任何電話號碼或信笱地址。最後一行輸出：[TAB:xxx]，xxx選：notice/welfare/leave/eval/bonus/org/onboard/clock/complaint。
 公司：安橋股份有限公司，統編90374325
 上班：早班09-18、晚班10-19，午休1小時，遲到請1小時事假，08:30後才可打卡須在辦公室
 打卡：鼎新電腦+Line官方帳號連動工號。加班：滿9小時佑5切分後算
 特休：滿半年3天、1年7天、2年10天、3-4年14天、5-9年15天、10年以上每年加1天最高30天
 假別：事假（年不超14日無薪）；病假（30天折半薪，31天起無薪）；婚假日；產假564天；降產假天；育嬲假滿半年可申請
 請假：Line官方帳號或Easy Flow，以小時為單位
-福利：員購金月5003築8001生日1000；礼金3築1000生日1000；運動津貼每月5001；生育2000；結娘3600；喪葬2500
-獎金（115年1月起）：月業績赥80%抽2.5%至300%抽9%（需通時通數100%）；品牌達標2品1000/3品2000/4品5000；季個人獃6100%劖3000；季團隊腱餐100%每人500；新人獎M1-6赥40%劖6000
+福利：員購金月5003築8001生日1000；礼金3築1000生日1000；運動津貼每月5001；生育2000；結娘3600；喪葬2500（直系親屬與配偶）
+獎金（2026年1月起）：①月業績達80%抽2.5%～300%抽9%（需通時通數100%）；②品牌達標2品1000/3品2000/4品5000；③大單王：單筆萬元以上每單加發$100起；④季個人達100%加$3000，超標最高$20000；⑤季團隊聚餐達100%每人$500起；⑥新人王M1-6達100%加$6000/M7-12加$8000；⑦年度分紅：業績達400萬抽0.3%，最高1000萬抽3%（通時通數需80%以上）
 獎金問題：請詢問財務組長陳姿吟，使用「我有話想說」功能聯繫。[TAB:complaint]
-人資問題：請詢問人資組長莊雯淋，使用「我有話想說」功能聯繫。[TAB:complaint]
+人資問題：請詢問人資組長莊雯淇，使用「我有話想說」功能聯繫。[TAB:complaint]
 其他問題：建議使用「我有話想說」功能聯繫相關主管。[TAB:complaint]`;
 let busy=false;
 const CM=document.getElementById('cm');
 const TW=document.getElementById('tw');
+const SCROLL_BTN=document.getElementById('scroll-btn');
+
+function scrollToBottom(){CM.scrollTop=CM.scrollHeight;}
+CM.addEventListener('scroll',function(){
+  const distFromBottom=CM.scrollHeight-CM.scrollTop-CM.clientHeight;
+  if(distFromBottom>80){SCROLL_BTN.classList.add('show');}
+  else{SCROLL_BTN.classList.remove('show');}
+});
 let notices=JSON.parse(localStorage.getItem('anb_n')||'[]');
 function saveN(){localStorage.setItem('anb_n',JSON.stringify(notices))}
 function renderN(){
-  const fixed=`<div class="ni"><div class="nd"></div><div class="nc"><div class="nt">歡迎使用安橋HR人資資訊系統！如有問題可使用右側AI助理，或至申訴窗口提出建議。<span class="npin">置頂</span></div><div class="nm">人資部 · 2026/04/28</div></div></div><div class="ni"><div class="nd"></div><div class="nc"><div class="nt">工作規則已於114年05月更新，請同仁留意假別及獎懲相關規定。</div><div class="nm">人資部 · 2026/04/28</div></div></div>`;
-  const dyn=notices.map((n,i)=>`<div class="ni"><div class="nd"></div><div class="nc"><div class="nt">${n.t}</div><div class="nm">人資部 · ${n.d} <span class="ndel" onclick="delN(${i})">✕ 刪除</span></div></div></div>`).join('');
-  document.getElementById('nl').innerHTML=dyn+fixed;
+  const d = getCheckinData();
+  const myName = getMyName();
+  const dynNotices = notices.map((n,i) => ({id:'n'+i, t:n.t, date:n.d, pin:false, dynIdx:i}));
+  const all = [...dynNotices];
+
+  if(all.length === 0){
+    document.getElementById('nl').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text3);font-size:13px">目前尚無公告</div>';
+    return;
+  }
+  document.getElementById('nl').innerHTML = all.map(item => {
+    const readers = d[item.id] || [];
+    const alreadyRead = myName && readers.includes(myName);
+    const readersHtml = readers.length > 0
+      ? readers.map(name => `<div class="reader-chip"><span style="width:16px;height:16px;border-radius:50%;background:var(--pk);color:white;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-right:3px">${name.slice(0,1)}</span>${name}</div>`).join('')
+      : '';
+    const delBtn = item.dynIdx !== undefined ? `<span class="ndel" onclick="delN(${item.dynIdx})">✕ 刪除</span>` : '';
+    const pinBadge = item.pin ? `<span class="npin">置頂</span>` : '';
+    return `<div class="ni">
+      <div class="nd"></div>
+      <div class="nc">
+        <div class="nt">${item.t}${pinBadge}</div>
+        <div class="nm">人資部 · ${item.date} ${delBtn}</div>
+        <div class="checkin-row">
+          <button class="checkin-btn${alreadyRead?' done':''}" ${alreadyRead?'disabled':''} onclick="handleCheckin('${item.id}')">
+            ${alreadyRead?'已確認 ✓':'我已讀 ✓'}
+          </button>
+          <span style="font-size:11px;color:var(--text2)">已有 <strong>${readers.length}</strong> 位同仁確認</span>
+          ${readers.length > 0 ? `<span style="font-size:11px;color:var(--pk);cursor:pointer" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='flex'?'none':'flex'">查看名單 ▾</span><div class="readers-wrap" style="display:none;width:100%">${readersHtml}</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
-function addNotice(){const v=document.getElementById('ni').value.trim();if(!v)return;const d=new Date();const ds=d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');notices.unshift({t:v,d:ds});saveN();renderN();document.getElementById('ni').value='';}
+function addNotice(){const v=document.getElementById('ni').value.trim();if(!v)return;const d=new Date();const ds=d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');notices.unshift({t:v,d:ds});saveN();renderN();document.getElementById('ni').value='';document.getElementById('ni').focus();}
 function delN(i){if(confirm('確定刪除？')){notices.splice(i,1);saveN();renderN();}}
 renderN();
 function submitC(){
@@ -625,37 +779,292 @@ function submitC(){
     method:'POST',
     headers:{'Content-Type':'application/json','Accept':'application/json'},
     body:JSON.stringify({
+      _subject:'【員工心聲】'+type+' - 收件：'+to,
       收件對象:to,
       寄件者:name,
       類型:type,
-      內容:cont,
-      _subject:'【員工心聲】'+type+' - 收件：'+to
+      內容:cont
     })
   }).then(function(r){
     if(r.ok){
       document.getElementById('cf').style.display='none';
       document.getElementById('sok').style.display='block';
     } else {
-      throw new Error('Failed');
+      throw new Error('failed');
     }
   }).catch(function(){
-    document.getElementById('sok-err').style.display='block';
-    btn.textContent='送出 💌';btn.disabled=false;
+    alert('寄送失敗，請稍後再試或直接寄信至 cchuang@anb-tw.com');
+    btn.textContent='產生信件內容 💌';btn.disabled=false;
+  });
+}
+function copyMail(){
+  var text=document.getElementById('sok-preview-content').textContent;
+  navigator.clipboard.writeText(text).then(function(){
+    var btn=document.getElementById('copy-btn');
+    btn.textContent='✅ 已複製！';btn.style.background='#16a34a';
+    setTimeout(function(){btn.textContent='📋 複製信件內容';btn.style.background='var(--pk)';},2000);
+  }).catch(function(){
+    var ta=document.createElement('textarea');
+    ta.value=text;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+    var btn=document.getElementById('copy-btn');
+    btn.textContent='✅ 已複製！';btn.style.background='#16a34a';
+    setTimeout(function(){btn.textContent='📋 複製信件內容';btn.style.background='var(--pk)';},2000);
   });
 }
 
 function updateRecipient(){}
-function showTab(id,btn){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));document.getElementById('sec-'+id).classList.add('on');const i=TI.indexOf(id);if(btn)btn.classList.add('on');else if(i>=0)document.querySelectorAll('.tb')[i].classList.add('on');}
+function showTab(id,btn){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));document.getElementById('sec-'+id).classList.add('on');const i=TI.indexOf(id);if(btn)btn.classList.add('on');else if(i>=0)document.querySelectorAll('.tb')[i].classList.add('on');if(id==='cal')setTimeout(renderCal,50);}
 function flashTab(id){const i=TI.indexOf(id);if(i<0)return;const b=document.querySelectorAll('.tb')[i];b.classList.remove('flash');void b.offsetWidth;b.classList.add('flash');}
 function toggleAcc(h){h.nextElementSibling.classList.toggle('open');h.querySelector('.cv').classList.toggle('open');}
 function ag(el){el.style.height='32px';el.style.height=Math.min(el.scrollHeight,80)+'px';}
 function hk(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
 function qa(q){document.getElementById('ci').value=q;send();}
 function addB(role,text,tabId){const isAI=role==='ai';const w=document.createElement('div');w.className='msg '+role;const av=document.createElement('div');av.className='mav '+(isAI?'a':'u');av.textContent=isAI?'HR':'我';const inn=document.createElement('div');const lb=document.createElement('div');lb.className='ml';lb.textContent=isAI?'HR 助理':'您';const b=document.createElement('div');b.className='bub';b.innerHTML=text.replace(/\n/g,'<br>');inn.appendChild(lb);inn.appendChild(b);if(isAI&&tabId){const h=document.createElement('button');h.className='nh';h.textContent='→ 查看「'+(TL[tabId]||tabId)+'」完整內容';h.onclick=()=>{showTab(tabId);flashTab(tabId);};inn.appendChild(h);}w.appendChild(av);w.appendChild(inn);CM.insertBefore(w,TW);CM.scrollTop=CM.scrollHeight;}
-async function send(){if(busy)return;const inp=document.getElementById('ci');const q=inp.value.trim();if(!q)return;inp.value='';inp.style.height='32px';document.getElementById('sb').disabled=true;busy=true;addB('user',q);TW.style.display='flex';CM.scrollTop=CM.scrollHeight;
+async function send(){if(busy)return;const inp=document.getElementById('ci');const q=inp.value.trim();if(!q)return;
+if(!KEY){
+  addB('ai','AI 助理尚未啟用，請點下方按鈕輸入啟用碼 🔑');
+  const btn=document.createElement('button');btn.className='nh';btn.textContent='🔑 輸入啟用碼';
+  btn.onclick=function(){if(checkKey())addB('ai','啟用成功！請重新發問 ✅');};
+  document.getElementById('cm').lastElementChild.querySelector('div').appendChild(btn);
+  return;
+}
+inp.value='';inp.style.height='32px';document.getElementById('sb').disabled=true;busy=true;addB('user',q);TW.style.display='flex';CM.scrollTop=CM.scrollHeight;
 try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:SYS,messages:[{role:'user',content:q}]})});
-const d=await r.json();if(d.error)throw new Error(d.error.message);let raw=d.content?.map(c=>c.text||'').join('')||'抱歉，暫時無法回覆。';const tm=raw.match(/\[TAB:(\w+)\]/);const tid=tm?tm[1]:null;const clean=raw.replace(/\[TAB:\w+\]/g,'').trim();TW.style.display='none';addB('ai',clean,tid);if(tid){showTab(tid);flashTab(tid);}}catch(e){TW.style.display='none';addB('ai','連線發生問題，請稍後再試，或直接聯繫人資室陳月圓經理。');}
+const d=await r.json();
+if(d.error){
+  TW.style.display='none';
+  if(d.error.type==='authentication_error'){
+    KEY='';localStorage.removeItem('anb_api_key');
+    addB('ai','啟用碼已失效，請重新輸入。');
+    const btn=document.createElement('button');btn.className='nh';btn.textContent='🔑 重新輸入啟用碼';
+    btn.onclick=function(){if(checkKey())addB('ai','啟用成功！請重新發問 ✅');};
+    CM.lastElementChild.querySelector('div').appendChild(btn);
+  } else {
+    addB('ai','抱歉，暫時無法回覆，請稍後再試。');
+  }
+  busy=false;document.getElementById('sb').disabled=false;return;
+}
+let raw=d.content?.map(c=>c.text||'').join('')||'抱歉，暫時無法回覆。';const tm=raw.match(/\[TAB:(\w+)\]/);const tid=tm?tm[1]:null;const clean=raw.replace(/\[TAB:\w+\]/g,'').trim();TW.style.display='none';addB('ai',clean,tid);CM.scrollTop=CM.scrollHeight;if(tid){showTab(tid);flashTab(tid);}}catch(e){TW.style.display='none';addB('ai','網路連線異常，請稍後再試。');}
 busy=false;document.getElementById('sb').disabled=false;}
+
+// ============================================================
+// 已讀簽到功能
+// ============================================================
+let currentNoticeId = null;
+
+function getCheckinData(){
+  try{ return JSON.parse(localStorage.getItem('anb_checkin')||'{}'); }
+  catch(e){ return {}; }
+}
+function saveCheckinData(d){ localStorage.setItem('anb_checkin', JSON.stringify(d)); }
+function getMyName(){ return localStorage.getItem('anb_my_name')||''; }
+
+function handleCheckin(id){
+  currentNoticeId = id;
+  const myName = getMyName();
+  if(myName){ doCheckin(myName, id); }
+  else {
+    document.getElementById('nm-overlay').classList.add('open');
+    setTimeout(()=>document.getElementById('nm-input').focus(), 100);
+  }
+}
+
+function doCheckin(name, id){
+  const d = getCheckinData();
+  if(!d[id]) d[id] = [];
+  if(!d[id].includes(name)) d[id].push(name);
+  saveCheckinData(d);
+  localStorage.setItem('anb_my_name', name);
+  closeNmModal();
+  renderN();
+}
+
+function confirmCheckin(){
+  const name = document.getElementById('nm-input').value.trim();
+  if(!name){ alert('請輸入姓名'); return; }
+  doCheckin(name, currentNoticeId);
+}
+function closeNmModal(){
+  document.getElementById('nm-overlay').classList.remove('open');
+  document.getElementById('nm-input').value = '';
+  currentNoticeId = null;
+}
+
+// ============================================================
+// 行事曆功能
+// ============================================================
+const CAL_MONTHS = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+const CAL_MNAMES = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+const EV_LABEL = {eval:'考核',meeting:'會議',other:'其他'};
+
+let calToday = new Date();
+let calYear = calToday.getFullYear();
+let calMonth = calToday.getMonth();
+
+function loadCalEvents(){
+  try{ return JSON.parse(localStorage.getItem('anb_cal')||'[]'); }
+  catch(e){ return []; }
+}
+function saveCalEvents(evs){ localStorage.setItem('anb_cal', JSON.stringify(evs)); }
+
+// 清除所有預設活動
+if(localStorage.getItem('anb_cal_ver') !== '3'){
+  localStorage.removeItem('anb_cal');
+  localStorage.setItem('anb_cal_ver','3');
+}
+
+let calEvents = loadCalEvents();
+if(calEvents.length === 0){
+  saveCalEvents(calEvents);
+}
+
+function renderCal(){
+  const titleEl = document.getElementById('cal-title');
+  if(!titleEl) return;
+  titleEl.textContent = calYear + ' 年 ' + CAL_MONTHS[calMonth];
+  const grid = document.getElementById('cal-grid');
+  if(!grid) return;
+  const days = ['日','一','二','三','四','五','六'];
+  let html = days.map(d => `<div class="cal-day-hdr">${d}</div>`).join('');
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+  const todayStr = calToday.toISOString().slice(0,10);
+  for(let i=0;i<firstDay;i++){
+    const d = daysInPrev - firstDay + 1 + i;
+    html += makeCellHtml(d, calMonth-1, calYear, true, todayStr);
+  }
+  for(let d=1;d<=daysInMonth;d++){
+    html += makeCellHtml(d, calMonth, calYear, false, todayStr);
+  }
+  const total = firstDay + daysInMonth;
+  const rem = total%7===0?0:7-(total%7);
+  for(let d=1;d<=rem;d++){
+    html += makeCellHtml(d, calMonth+1, calYear, true, todayStr);
+  }
+  grid.innerHTML = html;
+  renderUpcoming();
+}
+
+function makeCellHtml(day, month, year, otherM, todayStr){
+  const rm = ((month%12)+12)%12;
+  const ry = year + Math.floor(month/12);
+  const dateStr = ry+'-'+String(rm+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+  const isToday = dateStr === todayStr;
+  const cls = 'cal-cell'+(otherM?' other-m':'')+(isToday?' today-c':'');
+  const dayEvs = calEvents.filter(e => e.date === dateStr);
+  let evHtml = dayEvs.slice(0,2).map(ev =>
+    `<div class="ev-dot ev-${ev.type}" title="${ev.title}">${ev.title}</div>`
+  ).join('');
+  if(dayEvs.length>2) evHtml += `<div style="font-size:10px;color:var(--text3)">+${dayEvs.length-2}</div>`;
+  return `<div class="${cls}"><div class="cal-dn">${day}</div>${evHtml}</div>`;
+}
+
+function renderUpcoming(){
+  var el = document.getElementById('upcoming-list');
+  if(!el) return;
+  var todayStr = calToday.toISOString().slice(0,10);
+  var ups = calEvents.filter(function(e){return e.date>=todayStr;}).sort(function(a,b){return a.date.localeCompare(b.date);}).slice(0,8);
+  if(!ups.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--text3);padding:8px 0">近期無活動</div>';
+    return;
+  }
+  var clsMap = {eval:'tg',meeting:'tb2',other:'tr'};
+  var html = ups.map(function(ev){
+    var d = new Date(ev.date+'T00:00:00');
+    var mon = CAL_MNAMES[d.getMonth()];
+    var day = d.getDate();
+    return '<div class="ev-item">'
+      +'<div class="ev-badge"><div class="ev-badge-m">'+mon+'</div><div class="ev-badge-d">'+day+'</div></div>'
+      +'<div style="flex:1"><div class="ev-info-title">'+ev.title+'<span class="tag '+(clsMap[ev.type]||'tr')+' ev-tag">'+(EV_LABEL[ev.type]||'其他')+'</span></div>'+(ev.note?'<div class="ev-info-note">'+ev.note+'</div>':'')+'</div>'
+      +'<button class="ev-del" data-evid="'+ev.id+'">✕</button>'
+      +'</div>';
+  }).join('');
+  el.innerHTML = html;
+}
+
+// 刪除按鈕：只綁一次，掛在父層（不受 innerHTML 重寫影響）
+document.addEventListener('click', function(e){
+  var btn = e.target.closest('.ev-del');
+  if(!btn) return;
+  var id = btn.getAttribute('data-evid');
+  if(!id) return;
+  calEvents = calEvents.filter(function(ev){ return ev.id !== id; });
+  saveCalEvents(calEvents);
+  renderCal();
+});
+
+function changeMonth(dir){
+  calMonth += dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCal();
+}
+
+function openCalModal(){
+  document.getElementById('cal-modal').classList.add('open');
+  const d = new Date();
+  document.getElementById('cal-ev-date').value = d.toISOString().slice(0,10);
+  setTimeout(()=>document.getElementById('cal-ev-title').focus(),100);
+}
+function closeCalModal(){ document.getElementById('cal-modal').classList.remove('open'); }
+
+function addCalEvent(){
+  const title = document.getElementById('cal-ev-title').value.trim();
+  const date = document.getElementById('cal-ev-date').value;
+  const type = document.getElementById('cal-ev-type').value;
+  const note = document.getElementById('cal-ev-note').value.trim();
+  if(!title||!date){ alert('請填寫活動名稱和日期'); return; }
+  calEvents.push({id:'e'+Date.now(), title, date, type, note});
+  saveCalEvents(calEvents);
+  closeCalModal();
+  document.getElementById('cal-ev-title').value='';
+  document.getElementById('cal-ev-note').value='';
+  renderCal();
+}
+
+// Render calendar when cal tab is active
+document.querySelectorAll && document.addEventListener('click', function(e){
+  if(e.target && e.target.classList.contains('tb')){
+    setTimeout(function(){ if(document.getElementById('sec-cal') && document.getElementById('sec-cal').classList.contains('on')) renderCal(); }, 60);
+  }
+});
+
 </script>
+
+<!-- 姓名輸入 Modal -->
+<div class="nm-overlay" id="nm-overlay">
+  <div class="nm-box">
+    <h3>請輸入您的姓名</h3>
+    <p>方便人資確認哪些同仁已閱讀此公告</p>
+    <input type="text" id="nm-input" placeholder="例如：王小明" maxlength="10" onkeydown="if(event.key==='Enter')confirmCheckin()"/>
+    <div class="nm-btns">
+      <button class="nm-cancel" onclick="closeNmModal()">取消</button>
+      <button class="nm-ok" onclick="confirmCheckin()">確認已讀</button>
+    </div>
+  </div>
+</div>
+
+<!-- 行事曆新增 Modal -->
+<div class="cal-modal-overlay" id="cal-modal">
+  <div class="cal-modal-box">
+    <h3>新增活動</h3>
+    <div class="fg"><label class="fl">活動名稱</label><input type="text" class="fi" id="cal-ev-title" placeholder="例如：Q2考核截止"/></div>
+    <div class="fg"><label class="fl">日期</label><input type="date" class="fi" id="cal-ev-date"/></div>
+    <div class="fg"><label class="fl">類型</label>
+      <select class="fs" id="cal-ev-type">
+        <option value="eval">📊 考核</option>
+        <option value="meeting">📅 會議</option>
+        <option value="other">📌 其他</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">備註（選填）</label><input type="text" class="fi" id="cal-ev-note" placeholder=""/></div>
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="nab" style="flex:1" onclick="addCalEvent()">新增</button>
+      <button onclick="closeCalModal()" style="padding:8px 14px;border:1px solid var(--border2);border-radius:var(--r);background:transparent;cursor:pointer;font-family:inherit;color:var(--text2)">取消</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

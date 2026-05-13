@@ -671,6 +671,12 @@ tr:hover td{background:var(--pk-light)}
   <button class="scroll-btn" id="scroll-btn" onclick="scrollToBottom()" title="滾到最新訊息">↓</button>
   <div class="cm" id="cm">
     <div class="msg ai"><div class="mav a">HR</div><div><div class="ml">HR 助理</div><div class="bub">您好！有任何人資問題直接問我，我會回答並帶您到對應頁面 👋</div></div></div>
+    <div id="key-box" style="display:none;background:var(--pk-light);border:1px solid var(--pk-mid);border-radius:10px;padding:12px;margin:4px 0;font-size:12px">
+      <div style="font-weight:600;color:var(--pk-dark);margin-bottom:8px">🔑 請輸入 AI 助理啟用碼</div>
+      <input id="key-input" type="password" placeholder="sk-ant-..." style="width:100%;border:1px solid var(--pk-border);border-radius:6px;padding:7px 10px;font-size:12px;font-family:inherit;outline:none;margin-bottom:8px"/>
+      <button onclick="checkKey()" style="width:100%;background:var(--pk);color:white;border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:600;cursor:pointer">啟用 AI 助理</button>
+      <div style="font-size:11px;color:var(--text3);margin-top:6px">啟用碼請向人資取得，輸入後自動記住不需重複輸入</div>
+    </div>
     <div class="tr2" id="tw" style="display:none"><div class="mav a">HR</div><div class="dots"><span></span><span></span><span></span></div></div>
   </div>
   <div class="qa">
@@ -689,20 +695,23 @@ tr:hover td{background:var(--pk-light)}
 </div>
 <div class="footer">安橋股份有限公司 人資部｜© 2026 ANB HR Platform</div>
 <script>
-// API Key 從 localStorage 讀取
 let KEY = localStorage.getItem('anb_api_key') || '';
 
 function checkKey(){
-  const k = prompt('請輸入 AI 助理啟用碼（向人資取得）：');
-  if(k && k.trim().startsWith('sk-ant-')){
-    KEY = k.trim();
+  const k = document.getElementById('key-input').value.trim();
+  if(k.startsWith('sk-ant-')){
+    KEY = k;
     localStorage.setItem('anb_api_key', KEY);
-    return true;
-  } else if(k) {
-    alert('啟用碼格式不正確，請重新確認。');
+    document.getElementById('key-box').style.display='none';
+    addB('ai','啟用成功！有任何人資問題請直接問我 ✅');
+  } else {
+    alert('啟用碼格式不正確，請確認後重試。');
   }
-  return false;
 }
+
+window.addEventListener('DOMContentLoaded', function(){
+  if(!KEY) document.getElementById('key-box').style.display='block';
+});
 const TL={notice:'公告欄',cal:'行事曆',welfare:'員工福利',leave:'請假與出勤',org:'組織架構',clock:'打卡系統',complaint:'我有話想說',eval:'考核標準',bonus:'獎金制度'};
 const TI=['notice','cal','welfare','leave','eval','bonus','org','onboard','clock','complaint'];
 const SYS=`你是安橋股份有限公司HR智能助理。繁體中文，語氣亲切，100字內，必要時條列。絕對不顯示任何電話號碼或信笱地址。最後一行輸出：[TAB:xxx]，xxx選：notice/welfare/leave/eval/bonus/org/onboard/clock/complaint。
@@ -823,10 +832,8 @@ function qa(q){document.getElementById('ci').value=q;send();}
 function addB(role,text,tabId){const isAI=role==='ai';const w=document.createElement('div');w.className='msg '+role;const av=document.createElement('div');av.className='mav '+(isAI?'a':'u');av.textContent=isAI?'HR':'我';const inn=document.createElement('div');const lb=document.createElement('div');lb.className='ml';lb.textContent=isAI?'HR 助理':'您';const b=document.createElement('div');b.className='bub';b.innerHTML=text.replace(/\n/g,'<br>');inn.appendChild(lb);inn.appendChild(b);if(isAI&&tabId){const h=document.createElement('button');h.className='nh';h.textContent='→ 查看「'+(TL[tabId]||tabId)+'」完整內容';h.onclick=()=>{showTab(tabId);flashTab(tabId);};inn.appendChild(h);}w.appendChild(av);w.appendChild(inn);CM.insertBefore(w,TW);CM.scrollTop=CM.scrollHeight;}
 async function send(){if(busy)return;const inp=document.getElementById('ci');const q=inp.value.trim();if(!q)return;
 if(!KEY){
-  addB('ai','AI 助理尚未啟用，請點下方按鈕輸入啟用碼 🔑');
-  const btn=document.createElement('button');btn.className='nh';btn.textContent='🔑 輸入啟用碼';
-  btn.onclick=function(){if(checkKey())addB('ai','啟用成功！請重新發問 ✅');};
-  document.getElementById('cm').lastElementChild.querySelector('div').appendChild(btn);
+  document.getElementById('key-box').style.display='block';
+  CM.scrollTop=CM.scrollHeight;
   return;
 }
 inp.value='';inp.style.height='32px';document.getElementById('sb').disabled=true;busy=true;addB('user',q);TW.style.display='flex';CM.scrollTop=CM.scrollHeight;
@@ -837,9 +844,8 @@ if(d.error){
   if(d.error.type==='authentication_error'){
     KEY='';localStorage.removeItem('anb_api_key');
     addB('ai','啟用碼已失效，請重新輸入。');
-    const btn=document.createElement('button');btn.className='nh';btn.textContent='🔑 重新輸入啟用碼';
-    btn.onclick=function(){if(checkKey())addB('ai','啟用成功！請重新發問 ✅');};
-    CM.lastElementChild.querySelector('div').appendChild(btn);
+    document.getElementById('key-box').style.display='block';
+    CM.scrollTop=CM.scrollHeight;
   } else {
     addB('ai','抱歉，暫時無法回覆，請稍後再試。');
   }

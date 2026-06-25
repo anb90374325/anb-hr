@@ -895,6 +895,7 @@ function doCheckin(name, id){
 function confirmCheckin(){
   const name = document.getElementById('nm-input').value.trim();
   if(!name){ alert('請輸入姓名'); return; }
+  if(name.length<2){ alert('請輸入完整全名（至少2個字）'); return; }
   doCheckin(name, currentNoticeId);
 }
 function closeNmModal(){
@@ -1049,7 +1050,7 @@ document.querySelectorAll && document.addEventListener('click', function(e){
 <div class="nm-overlay" id="nm-overlay">
   <div class="nm-box">
     <h3>請輸入您的姓名</h3>
-    <p>方便人資確認哪些同仁已閱讀此公告</p>
+    <p>方便人資確認哪些同仁已閱讀此公告<br><span style="color:var(--pk);font-weight:600">※ 請輸入全名（僅需輸入一次，之後自動記住）</span></p>
     <input type="text" id="nm-input" placeholder="例如：王小明" maxlength="10" onkeydown="if(event.key==='Enter')confirmCheckin()"/>
     <div class="nm-btns">
       <button class="nm-cancel" onclick="closeNmModal()">取消</button>

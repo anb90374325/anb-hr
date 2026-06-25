@@ -195,6 +195,9 @@ tr:hover td{background:var(--pk-light)}
     <textarea id="ni" placeholder="輸入公告內容…（Shift+Enter 換行，Enter 發布）" rows="2" oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addNotice();}"></textarea>
     <button class="nab" onclick="addNotice()">＋ 發布</button>
   </div>
+  <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);margin:-4px 0 12px;cursor:pointer">
+    <input type="checkbox" id="ni-pin" style="width:14px;height:14px;cursor:pointer"/> 📌 設為置頂公告
+  </label>
 
   <div class="ssub">最新公告</div>
   <div id="nl"></div>
@@ -743,8 +746,8 @@ function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(
 function renderN(){
   const d = getCheckinData();
   const myName = getMyName();
-  const dynNotices = notices.map((n,i) => ({id:'n'+i, t:n.t, date:n.d, pin:false, dynIdx:i}));
-  const all = [...dynNotices];
+  const dynNotices = notices.map((n,i) => ({id:'n'+i, t:n.t, date:n.d, pin:!!n.pin, dynIdx:i}));
+  const all = [...dynNotices].sort((a,b) => (b.pin?1:0) - (a.pin?1:0));
 
   if(all.length === 0){
     document.getElementById('nl').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text3);font-size:13px">目前尚無公告</div>';
@@ -757,12 +760,13 @@ function renderN(){
       ? readers.map(name => `<div class="reader-chip"><span style="width:16px;height:16px;border-radius:50%;background:var(--pk);color:white;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-right:3px">${name.slice(0,1)}</span>${name}</div>`).join('')
       : '';
     const delBtn = item.dynIdx !== undefined ? `<span class="ndel" onclick="delN(${item.dynIdx})">✕ 刪除</span>` : '';
+    const pinBtn = item.dynIdx !== undefined ? `<span class="ndel" onclick="togglePin(${item.dynIdx})">${item.pin?'取消置頂':'📌 置頂'}</span>` : '';
     const pinBadge = item.pin ? `<span class="npin">置頂</span>` : '';
     return `<div class="ni">
       <div class="nd"></div>
       <div class="nc">
         <div class="nt">${escHtml(item.t)}${pinBadge}</div>
-        <div class="nm">人資部 · ${item.date} ${delBtn}</div>
+        <div class="nm">人資部 · ${item.date} ${pinBtn} ${delBtn}</div>
         <div class="checkin-row">
           <button class="checkin-btn${alreadyRead?' done':''}" ${alreadyRead?'disabled':''} onclick="handleCheckin('${item.id}')">
             ${alreadyRead?'已確認 ✓':'我已讀 ✓'}
@@ -774,8 +778,9 @@ function renderN(){
     </div>`;
   }).join('');
 }
-function addNotice(){const v=document.getElementById('ni').value.trim();if(!v)return;const d=new Date();const ds=d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');notices.unshift({t:v,d:ds});saveN();renderN();const ta=document.getElementById('ni');ta.value='';ta.style.height='auto';ta.focus();}
+function addNotice(){const v=document.getElementById('ni').value.trim();if(!v)return;const d=new Date();const ds=d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');const pin=document.getElementById('ni-pin').checked;notices.unshift({t:v,d:ds,pin:pin});saveN();renderN();const ta=document.getElementById('ni');ta.value='';ta.style.height='auto';document.getElementById('ni-pin').checked=false;ta.focus();}
 function delN(i){notices.splice(i,1);saveN();renderN();}
+function togglePin(i){notices[i].pin=!notices[i].pin;saveN();renderN();}
 renderN();
 function submitC(){
   var to=document.getElementById('cto').value;

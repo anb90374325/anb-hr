@@ -696,7 +696,7 @@ tr:hover td{background:var(--pk-light)}
 </div>
 </div>
 <div class="footer">安橋股份有限公司 人資部｜© 2026 ANB HR Platform</div>
-<script>
+<script type="module">
 let KEY = localStorage.getItem('anb_api_key') || '';
 
 function checkKey(){
@@ -739,35 +739,52 @@ CM.addEventListener('scroll',function(){
   if(distFromBottom>80){SCROLL_BTN.classList.add('show');}
   else{SCROLL_BTN.classList.remove('show');}
 });
-let notices=JSON.parse(localStorage.getItem('anb_n')||'[]');
-function saveN(){localStorage.setItem('anb_n',JSON.stringify(notices))}
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function renderN(){
-  const d = getCheckinData();
-  const myName = getMyName();
-  const dynNotices = notices.map((n,i) => ({id:'n'+i, t:n.t, date:n.d, pin:!!n.pin, dynIdx:i}));
-  const all = [...dynNotices].sort((a,b) => (b.pin?1:0) - (a.pin?1:0));
+// ── Firebase 公告同步 ──────────────────────────────
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, onValue, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-  if(all.length === 0){
+const firebaseConfig = {
+  apiKey: "AIzaSyBOreQ5W6Sy9rU-Rtf4sm-Wh3RUdC-omGA",
+  authDomain: "anb-hr.firebaseapp.com",
+  databaseURL: "https://anb-hr-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "anb-hr",
+  storageBucket: "anb-hr.firebasestorage.app",
+  messagingSenderId: "130807578856",
+  appId: "1:130807578856:web:83fe09ac1aef1a82d0895d"
+};
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+const noticesRef = ref(db, 'notices');
+
+let notices = []; // 從 Firebase 即時同步
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderN(){
+  const checkinData = getCheckinData();
+  const myName = getMyName();
+  const sorted = [...notices].sort((a,b) => (b.pin?1:0) - (a.pin?1:0));
+
+  if(sorted.length === 0){
     document.getElementById('nl').innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text3);font-size:13px">目前尚無公告</div>';
     return;
   }
-  document.getElementById('nl').innerHTML = all.map(item => {
-    const readers = d[item.id] || [];
+  document.getElementById('nl').innerHTML = sorted.map(item => {
+    const readers = checkinData[item.fbKey] || [];
     const alreadyRead = myName && readers.includes(myName);
     const readersHtml = readers.length > 0
       ? readers.map(name => `<div class="reader-chip"><span style="width:16px;height:16px;border-radius:50%;background:var(--pk);color:white;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-right:3px">${name.slice(0,1)}</span>${name}</div>`).join('')
       : '';
-    const delBtn = item.dynIdx !== undefined ? `<span class="ndel" onclick="delN(${item.dynIdx})">✕ 刪除</span>` : '';
-    const pinBtn = item.dynIdx !== undefined ? `<span class="ndel" onclick="togglePin(${item.dynIdx})">${item.pin?'取消置頂':'📌 置頂'}</span>` : '';
+    const delBtn = `<span class="ndel" onclick="delN('${item.fbKey}')">✕ 刪除</span>`;
+    const pinBtn = `<span class="ndel" onclick="togglePin('${item.fbKey}',${!item.pin})">${item.pin?'取消置頂':'📌 置頂'}</span>`;
     const pinBadge = item.pin ? `<span class="npin">置頂</span>` : '';
     return `<div class="ni">
       <div class="nd"></div>
       <div class="nc">
         <div class="nt">${escHtml(item.t)}${pinBadge}</div>
-        <div class="nm">人資部 · ${item.date} ${pinBtn} ${delBtn}</div>
+        <div class="nm">人資部 · ${item.d} ${pinBtn} ${delBtn}</div>
         <div class="checkin-row">
-          <button class="checkin-btn${alreadyRead?' done':''}" ${alreadyRead?'disabled':''} onclick="handleCheckin('${item.id}')">
+          <button class="checkin-btn${alreadyRead?' done':''}" ${alreadyRead?'disabled':''} onclick="handleCheckin('${item.fbKey}')">
             ${alreadyRead?'已確認 ✓':'我已讀 ✓'}
           </button>
           <span style="font-size:11px;color:var(--text2)">已有 <strong>${readers.length}</strong> 位同仁確認</span>
@@ -777,10 +794,56 @@ function renderN(){
     </div>`;
   }).join('');
 }
-function addNotice(){const v=document.getElementById('ni').value.trim();if(!v)return;const d=new Date();const ds=d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');const pin=document.getElementById('ni-pin').checked;notices.unshift({t:v,d:ds,pin:pin});saveN();renderN();const ta=document.getElementById('ni');ta.value='';ta.style.height='auto';document.getElementById('ni-pin').checked=false;ta.focus();}
-function delN(i){notices.splice(i,1);saveN();renderN();}
-function togglePin(i){notices[i].pin=!notices[i].pin;saveN();renderN();}
-renderN();
+
+// 即時監聽 Firebase 公告
+onValue(noticesRef, (snapshot) => {
+  notices = [];
+  if(snapshot.exists()){
+    snapshot.forEach(child => {
+      notices.push({fbKey: child.key, ...child.val()});
+    });
+    notices.sort((a,b) => (b.ts||0) - (a.ts||0));
+  }
+  renderN();
+});
+
+// 即時監聽簽到資料
+const checkinsRef = ref(db, 'checkins');
+let firebaseCheckins = {};
+onValue(checkinsRef, (snapshot) => {
+  firebaseCheckins = {};
+  if(snapshot.exists()){
+    snapshot.forEach(noticeSnap => {
+      const readers = [];
+      noticeSnap.forEach(userSnap => { readers.push(userSnap.val()); });
+      firebaseCheckins[noticeSnap.key] = readers;
+    });
+  }
+  // 同步更新本地快取
+  saveCheckinData(firebaseCheckins);
+  renderN();
+});
+
+function addNotice(){
+  const v = document.getElementById('ni').value.trim();
+  if(!v) return;
+  const d = new Date();
+  const ds = d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');
+  const pin = document.getElementById('ni-pin').checked;
+  push(noticesRef, {t:v, d:ds, pin:pin, ts: Date.now()});
+  const ta = document.getElementById('ni');
+  ta.value=''; ta.style.height='auto';
+  document.getElementById('ni-pin').checked=false;
+  ta.focus();
+}
+
+function delN(fbKey){
+  remove(ref(db, 'notices/'+fbKey));
+}
+
+function togglePin(fbKey, pinVal){
+  update(ref(db, 'notices/'+fbKey), {pin: pinVal});
+}
 function submitC(){
   var to=document.getElementById('cto').value;
   var cont=document.getElementById('ccontent').value.trim();
@@ -882,6 +945,10 @@ function handleCheckin(id){
 }
 
 function doCheckin(name, id){
+  // 存到 Firebase
+  const checkinRef = ref(db, 'checkins/' + id + '/' + name.replace(/\./g,'_'));
+  update(ref(db, 'checkins/' + id), {[name.replace(/\./g,'_')]: name});
+  // 同時存本地（記住姓名用）
   const d = getCheckinData();
   if(!d[id]) d[id] = [];
   if(!d[id].includes(name)) d[id].push(name);
@@ -1043,6 +1110,15 @@ document.querySelectorAll && document.addEventListener('click', function(e){
   }
 });
 
+// 將所有 onclick 用到的函數掛到 window（module 作用域需要）
+Object.assign(window, {
+  checkKey, scrollToBottom, addNotice, delN, togglePin,
+  submitC, copyMail, updateRecipient, showTab, flashTab,
+  toggleAcc, ag, hk, qa, addB, send,
+  handleCheckin, confirmCheckin, closeNmModal,
+  openCalModal, closeCalModal, addCalEvent, changeMonth,
+  renderCal, renderUpcoming
+});
 </script>
 
 <!-- 姓名輸入 Modal -->

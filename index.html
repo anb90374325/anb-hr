@@ -697,6 +697,9 @@ tr:hover td{background:var(--pk-light)}
 </div>
 <div class="footer">安橋股份有限公司 人資部｜© 2026 ANB HR Platform</div>
 <script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getDatabase, ref, onValue, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
+
 let KEY = localStorage.getItem('anb_api_key') || '';
 
 function checkKey(){
@@ -740,9 +743,6 @@ CM.addEventListener('scroll',function(){
   else{SCROLL_BTN.classList.remove('show');}
 });
 // ── Firebase 公告同步 ──────────────────────────────
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, onValue, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
 const firebaseConfig = {
   apiKey: "AIzaSyBOreQ5W6Sy9rU-Rtf4sm-Wh3RUdC-omGA",
   authDomain: "anb-hr.firebaseapp.com",
@@ -928,7 +928,9 @@ busy=false;document.getElementById('sb').disabled=false;}
 let currentNoticeId = null;
 
 function getCheckinData(){
-  try{ return JSON.parse(localStorage.getItem('anb_checkin')||'{}'); }
+  try{ return firebaseCheckins && Object.keys(firebaseCheckins).length > 0
+    ? firebaseCheckins
+    : JSON.parse(localStorage.getItem('anb_checkin')||'{}'); }
   catch(e){ return {}; }
 }
 function saveCheckinData(d){ localStorage.setItem('anb_checkin', JSON.stringify(d)); }

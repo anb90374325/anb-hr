@@ -696,10 +696,9 @@ tr:hover td{background:var(--pk-light)}
 </div>
 </div>
 <div class="footer">安橋股份有限公司 人資部｜© 2026 ANB HR Platform</div>
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getDatabase, ref, onValue, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
 let KEY = localStorage.getItem('anb_api_key') || '';
 
 function checkKey(){
@@ -752,9 +751,10 @@ const firebaseConfig = {
   messagingSenderId: "130807578856",
   appId: "1:130807578856:web:83fe09ac1aef1a82d0895d"
 };
-const fbApp = initializeApp(firebaseConfig);
-const db = getDatabase(fbApp);
-const noticesRef = ref(db, 'notices');
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const noticesRef = db.ref('notices');
+const checkinsRef = db.ref('checkins');
 
 let notices = []; // 從 Firebase 即時同步
 
@@ -796,7 +796,7 @@ function renderN(){
 }
 
 // 即時監聽 Firebase 公告
-onValue(noticesRef, (snapshot) => {
+noticesRef.orderByChild('ts').on('value', (snapshot) => {
   notices = [];
   if(snapshot.exists()){
     snapshot.forEach(child => {
@@ -808,9 +808,8 @@ onValue(noticesRef, (snapshot) => {
 });
 
 // 即時監聽簽到資料
-const checkinsRef = ref(db, 'checkins');
 let firebaseCheckins = {};
-onValue(checkinsRef, (snapshot) => {
+checkinsRef.on('value', (snapshot) => {
   firebaseCheckins = {};
   if(snapshot.exists()){
     snapshot.forEach(noticeSnap => {
@@ -819,7 +818,6 @@ onValue(checkinsRef, (snapshot) => {
       firebaseCheckins[noticeSnap.key] = readers;
     });
   }
-  // 同步更新本地快取
   saveCheckinData(firebaseCheckins);
   renderN();
 });
@@ -830,7 +828,7 @@ function addNotice(){
   const d = new Date();
   const ds = d.getFullYear()+'/'+(d.getMonth()+1+'').padStart(2,'0')+'/'+(''+d.getDate()).padStart(2,'0');
   const pin = document.getElementById('ni-pin').checked;
-  push(noticesRef, {t:v, d:ds, pin:pin, ts: Date.now()});
+  noticesRef.push({t:v, d:ds, pin:pin, ts: Date.now()});
   const ta = document.getElementById('ni');
   ta.value=''; ta.style.height='auto';
   document.getElementById('ni-pin').checked=false;
@@ -838,11 +836,11 @@ function addNotice(){
 }
 
 function delN(fbKey){
-  remove(ref(db, 'notices/'+fbKey));
+  db.ref('notices/'+fbKey).remove();
 }
 
 function togglePin(fbKey, pinVal){
-  update(ref(db, 'notices/'+fbKey), {pin: pinVal});
+  db.ref('notices/'+fbKey).update({pin: pinVal});
 }
 function submitC(){
   var to=document.getElementById('cto').value;
@@ -947,10 +945,8 @@ function handleCheckin(id){
 }
 
 function doCheckin(name, id){
-  // 存到 Firebase
-  const checkinRef = ref(db, 'checkins/' + id + '/' + name.replace(/\./g,'_'));
-  update(ref(db, 'checkins/' + id), {[name.replace(/\./g,'_')]: name});
-  // 同時存本地（記住姓名用）
+  const key = name.replace(/[.#$\[\]]/g,'_');
+  db.ref('checkins/'+id+'/'+key).set(name);
   const d = getCheckinData();
   if(!d[id]) d[id] = [];
   if(!d[id].includes(name)) d[id].push(name);
@@ -1110,16 +1106,6 @@ document.querySelectorAll && document.addEventListener('click', function(e){
   if(e.target && e.target.classList.contains('tb')){
     setTimeout(function(){ if(document.getElementById('sec-cal') && document.getElementById('sec-cal').classList.contains('on')) renderCal(); }, 60);
   }
-});
-
-// 將所有 onclick 用到的函數掛到 window（module 作用域需要）
-Object.assign(window, {
-  checkKey, scrollToBottom, addNotice, delN, togglePin,
-  submitC, copyMail, updateRecipient, showTab, flashTab,
-  toggleAcc, ag, hk, qa, addB, send,
-  handleCheckin, confirmCheckin, closeNmModal,
-  openCalModal, closeCalModal, addCalEvent, changeMonth,
-  renderCal, renderUpcoming
 });
 </script>
 
